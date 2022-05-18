@@ -2,9 +2,9 @@
 
 Provides support for http push subscriptions, as an alternative to the official [watermill-googlecloud](https://github.com/ThreeDotsLabs/watermill-googlecloud) repository. It was created to support our services running on Cloud Run, which restricts us to use push subscriptions on Google Cloud.
 
-So this is in other words some kind of hybrid of [watermill-googlecloud](https://github.com/ThreeDotsLabs/watermill-googlecloud) and [watermill-http](https://github.com/ThreeDotsLabs/watermill-http), but does not enforce the use of chi.
+So this is in other words some kind of hybrid of [watermill-googlecloud](https://github.com/ThreeDotsLabs/watermill-googlecloud) and [watermill-http](https://github.com/ThreeDotsLabs/watermill-http), but does not enforce the use of chi and let's you be "in charge" of the http server.
 
-At Dentech, we use this library together with our custom [dentech-watermill-opentelemetry](https://github.com/dentechse/watermill-opentelemetry) lib to get Opentelemetry traces propagated from publishers to subscribers (child span).
+At Dentech, we use this library together with our custom [dentech-floss/watermill-opentelemetry-go-extra](https://github.com/dentech-floss/watermill-opentelemetry-go-extra) lib to get Opentelemetry traces propagated from publishers to subscribers (child span).
 
 ## Usage
 
