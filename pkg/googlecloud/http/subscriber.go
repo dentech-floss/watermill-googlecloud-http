@@ -64,12 +64,14 @@ func (c *SubscriberConfig) setDefaults() {
 // When request is sent, it will wait for the `Ack`. When Ack is received 200 HTTP status will be sent.
 // When Nack is sent, 500 HTTP status will be sent.
 func (s *Subscriber) Subscribe(ctx context.Context, url string) (<-chan *message.Message, error) {
-
 	messages := make(chan *message.Message)
 
 	s.outputChannelsLock.Lock()
+	defer s.outputChannelsLock.Unlock()
+	if s.closed {
+		return nil, errors.New("subscriber is closed")
+	}
 	s.outputChannels = append(s.outputChannels, messages)
-	s.outputChannelsLock.Unlock()
 
 	baseLogFields := watermill.LogFields{"url": url, "provider": "googlecloud_http"}
 
@@ -79,9 +81,7 @@ func (s *Subscriber) Subscribe(ctx context.Context, url string) (<-chan *message
 
 	// Tell the callee to register this http handler on it's mux of choice
 	s.config.RegisterHttpHandler(url, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		msg, err := s.config.UnmarshalMessageFunc(r)
-
 		if err != nil {
 			s.logger.Info("Cannot unmarshal message", baseLogFields.Add(watermill.LogFields{"err": err}))
 			w.WriteHeader(http.StatusBadRequest)
@@ -119,15 +119,15 @@ func (s *Subscriber) Subscribe(ctx context.Context, url string) (<-chan *message
 	return messages, nil
 }
 
-func (s *Subscriber) Close() error {
+func (s *Subscriber) Close() {
+	s.outputChannelsLock.Lock()
+	defer s.outputChannelsLock.Unlock()
 	if s.closed {
-		return nil
+		return
 	}
 	s.closed = true
 
 	for _, ch := range s.outputChannels {
 		close(ch)
 	}
-
-	return nil
 }
