@@ -119,17 +119,15 @@ func (s *Subscriber) Subscribe(ctx context.Context, url string) (<-chan *message
 	return messages, nil
 }
 
-func (s *Subscriber) Close() error {
+func (s *Subscriber) Close() {
 	s.outputChannelsLock.Lock()
 	defer s.outputChannelsLock.Unlock()
 	if s.closed {
-		return errors.New("subscriber already closed")
+		return
 	}
 	s.closed = true
 
 	for _, ch := range s.outputChannels {
 		close(ch)
 	}
-
-	return nil
 }
