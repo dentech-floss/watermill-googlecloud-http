@@ -4,7 +4,7 @@ go 1.26
 
 require (
 	github.com/ThreeDotsLabs/watermill v1.5.2
-	google.golang.org/api v0.285.0
+	google.golang.org/api v0.286.0
 )
 
 require (
