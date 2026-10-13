@@ -3,7 +3,7 @@ module github.com/dentech-floss/watermill-googlecloud-http
 go 1.26
 
 require (
-	github.com/ThreeDotsLabs/watermill v1.5.2
+	github.com/ThreeDotsLabs/watermill v1.5.3
 	google.golang.org/api v0.285.0
 )
 
